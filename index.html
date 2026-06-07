@@ -1,3 +1,6 @@
+<script type="module">
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+</script>
 <!doctype html>
 <html lang="en">
 <head>
@@ -843,7 +846,17 @@
       if (nav) showScreen(nav.dataset.screen);
     });
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
+  $("#signIn").onclick = () => {
+    const email = $("#email").value.trim();
+    const password = $("#password").value;
+
+    if (!email || password.length < 8) {
+        alert("Use an email and a password with at least 8 characters.");
+        return;
+    }
+
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             state.email = email;
             save();
