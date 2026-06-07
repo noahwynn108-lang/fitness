@@ -846,28 +846,37 @@ import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/fir
       if (nav) showScreen(nav.dataset.screen);
     });
 
-  $("#signIn").onclick = () => {
-    const email = $("#email").value.trim();
-    const password = $("#password").value;
+ document.addEventListener('DOMContentLoaded', (event) => {
 
-    if (!email || password.length < 8) {
-        alert("Use an email and a password with at least 8 characters.");
-        return;
-    }
+    $("#signIn").onclick = () => {
+        const email = $("#email").value.trim();
+        const password = $("#password").value;
 
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            state.email = email;
-            save();
-            $("#auth").classList.add("hidden");
-            $("#app").classList.remove("hidden");
-        })
-        .catch((error) => {
-            alert(error.message);
-        });
-};
+        if (!email || password.length < 8) {
+            alert("Use an email and a password with at least 8 characters.");
+            return;
+        }
 
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                state.email = email;
+                save();
+                $("#auth").classList.add("hidden");
+                $("#app").classList.remove("hidden");
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    };
+
+    $("#demo").onclick = () => {
+        $("#auth").classList.add("hidden");
+        $("#app").classList.remove("hidden");
+        save();
+    };
+
+});
     $("demo").onclick = () => {
       $("auth").classList.add("hidden");
       $("app").classList.remove("hidden");
