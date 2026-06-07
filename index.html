@@ -843,18 +843,17 @@
       if (nav) showScreen(nav.dataset.screen);
     });
 
-    $("signIn").onclick = () => {
-      const email = $("email").value.trim();
-      const password = $("password").value;
-      if (!email || password.length < 8) {
-        alert("Use an email and a password with at least 8 characters.");
-        return;
-      }
-      state.email = email;
-      save();
-      $("auth").classList.add("hidden");
-      $("app").classList.remove("hidden");
-    };
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            state.email = email;
+            save();
+            $("#auth").classList.add("hidden");
+            $("#app").classList.remove("hidden");
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
+};
 
     $("demo").onclick = () => {
       $("auth").classList.add("hidden");
