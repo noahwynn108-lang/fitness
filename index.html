@@ -3,293 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RiseFit - AI Fitness & Confidence Coach</title>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyA-QIDHNpFZ8zAkbDX-UKppyr4PnBBkWU",
-            authDomain: "risefit-68746.firebaseapp.com",
-            projectId: "risefit-68746",
-            storageBucket: "risefit-68746.firebasestorage.app",
-            messagingSenderId: "694414380923",
-            appId: "1:694414380923:web:0f7c53c61146169925b7de",
-            measurementId: "G-4EVX3DJKY7"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-    </script>
-
+    <title>App Dashboard Demo</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 0; 
-        }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 2rem; 
-        }
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 1rem 0; 
-            border-bottom: 1px solid #334155; 
-        }
-        .logo { 
-            font-size: 1.5rem; 
-            font-weight: bold; 
-            color: var(--primary); 
-        }
-        .nav-links button { 
-            background: transparent; 
-            border: none; 
-            color: var(--text); 
-            padding: 0.5rem 1rem; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            transition: color 0.2s; 
-        }
-        .nav-links button:hover { 
-            color: var(--primary); 
-        }
-        .hero { 
-            text-align: center; 
-            padding: 5rem 0; 
-        }
-        .hero h1 { 
-            font-size: 3rem; 
-            margin-bottom: 1rem; 
-        }
-        .hero p { 
-            color: var(--text-muted); 
-            font-size: 1.2rem; 
-            margin-bottom: 2rem; 
-        }
-        .btn { 
-            background: var(--primary); 
-            color: white; 
-            padding: 0.8rem 1.5rem; 
-            border: none; 
-            border-radius: 0.5rem; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            transition: background 0.2s; 
-            text-decoration: none; 
-            display: inline-block; 
-        }
-        .btn:hover { 
-            background: #4f46e5; 
-        }
-        
-        /* Multi-Tab Styles */
-        .tabs { 
-            display: flex; 
-            justify-content: center; 
-            gap: 1rem; 
-            margin: 2rem 0; 
-            border-bottom: 1px solid #334155; 
-            padding-bottom: 1rem; 
-        }
-        .tab-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-muted); 
-            font-size: 1.1rem; 
-            cursor: pointer; 
-            padding: 0.5rem 1rem; 
-            transition: all 0.2s; 
-        }
-        .tab-btn.active, .tab-btn:hover { 
-            color: var(--primary); 
-            border-bottom: 2px solid var(--primary); 
-        }
-        .tab-content { 
-            display: none; 
-        }
-        .tab-content.active { 
-            display: block; 
+            --bg-primary: #121212;
+            --bg-surface: #1e1e1e;
+            --bg-sidebar: #181818;
+            --accent: #00adb5;
+            --text-main: #eeeeee;
+            --text-muted: #95a5a6;
+            --border: #2c2c2c;
         }
 
-        .preview-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 2rem; 
-            margin-top: 3rem; 
-        }
-        .card { 
-            background: var(--card-bg); 
-            padding: 2rem; 
-            border-radius: 1rem; 
-            text-align: center; 
-        }
-        .card h3 { 
-            color: var(--primary); 
-            margin-bottom: 1rem; 
-        }
-
-        /* Form Styles */
-        .auth-form {
-            max-width: 400px;
-            margin: 3rem auto;
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1rem;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-        }
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid #334155;
-            background: var(--bg);
-            color: var(--text);
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-    </style>
-</head>
-<body>
 
-<div class="container">
-    <header>
-        <div class="logo">RiseFit</div>
-        <nav class="nav-links">
-            <button id="navLoginBtn">Sign In</button>
-            <button id="navSignupBtn">Sign Up</button>
-        </nav>
-    </header>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('home')">Home</button>
-        <button class="tab-btn" onclick="switchTab('features')">Features</button>
-        <button class="tab-btn" onclick="switchTab('tracker')">Tracker</button>
-    </div>
-
-    <!-- Home Tab -->
-    <div id="homeTab" class="tab-content active">
-        <div class="hero">
-            <h1>Your AI Fitness & Confidence Coach</h1>
-            <p>Get personalized workout routines, nutrition plans, and mental coaching tailored just for you.</p>
-            <button class="btn" onclick="switchTab('features')">Explore Features</button>
-        </div>
-    </div>
-
-    <!-- Features Tab -->
-    <div id="featuresTab" class="tab-content">
-        <div class="preview-grid">
-            <div class="card">
-                <h3>AI Workouts</h3>
-                <p>Custom exercise routines adapted to your fitness level and goals.</p>
-            </div>
-            <div class="card">
-                <h3>Nutrition Plans</h3>
-                <p>Daily meal suggestions and recipes designed to fuel your progress.</p>
-            </div>
-            <div class="card">
-                <h3>Confidence Coaching</h3>
-                <p>Mindset exercises and motivation to help you stay unstoppable.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tracker Tab -->
-    <div id="trackerTab" class="tab-content">
-        <div class="preview-grid">
-            <div class="card">
-                <h3>Workout Logs</h3>
-                <p>Track your daily exercises and completed sets here.</p>
-            </div>
-            <div class="card">
-                <h3>Meal Tracker</h3>
-                <p>Monitor your daily nutrition and calorie intake.</p>
-            </div>
-            <div class="card">
-                <h3>Daily Achievements</h3>
-                <p>Log your water intake and daily progress here.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sign In Page -->
-    <div id="loginPage" class="tab-content">
-        <div class="auth-form">
-            <h2>Sign In</h2>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" placeholder="Enter your password">
-            </div>
-            <button class="btn">Sign In</button>
-        </div>
-    </div>
-
-    <!-- Sign Up Page -->
-    <div id="signupPage" class="tab-content">
-        <div class="auth-form">
-            <h2>Create an Account</h2>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" placeholder="Create a password">
-            </div>
-            <button class="btn">Sign Up</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-        if (tabName === 'home') {
-            document.getElementById('homeTab').classList.add('active');
-            document.querySelector('.tab-btn').classList.add('active');
-        } else if (tabName === 'features') {
-            document.getElementById('featuresTab').classList.add('active');
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        } else if (tabName === 'tracker') {
-            document.getElementById('trackerTab').classList.add('active');
-            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
-    }
 
-    document.getElementById('navLoginBtn').addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.getElementById('loginPage').classList.add('active');
-    });
+        /* App Container Layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
 
-    document.getElementById('navSignupBtn').addEventListener('click', () => {
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.getElementById('signupPage').classList.add('active');
-    });
-</script>
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
 
-</body>
-</html>
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--bg-surface);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Landing/Intro Screen View */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .hero-section {
+            text-align: center;
+            max-width: 600px;
+            margin: 80px auto 0 auto;
+        }
+
+        .hero-section h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #008c92;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-surface);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #282828;
+        }
+
+        /* Features List View */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background-color: var(--bg-surface);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .feature-card h3 {
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font
