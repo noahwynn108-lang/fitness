@@ -3,494 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoreFit Dashboard</title>
+    <title>Gym Track & Blueprint Analytics</title>
     <style>
+        /* Stable Black & White Theme Base */
         :root {
-            --bg-main: #ffffff;
-            --bg-panel: #fcfcfc;
-            --border-heavy: #000000;
-            --border-light: #e0e0e0;
-            --text-dark: #111111;
-            --text-gray: #666666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --border-color: #000000;
+            --text-main: #000000;
+            --text-muted: #666666;
+            --accent-glow: rgba(0, 0, 0, 0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-family: 'Courier New', Courier, monospace; /* Blueprint style font */
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-dark);
+            background-color: var(--bg-primary);
+            color: var(--text-main);
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            border: 2px solid var(--border-color);
+            padding: 20px;
+            background: var(--bg-primary);
+            box-shadow: 5px 5px 0px var(--border-color);
+        }
+
+        /* Utility Hidden Class */
         .hidden {
             display: none !important;
         }
 
-        /* --- AUTH PAGE STYLES --- */
-        .gate-wrapper {
-            max-width: 400px;
-            margin: 60px auto;
-            padding: 30px;
-            border: 2px solid var(--border-heavy);
-            background: var(--bg-main);
-        }
-
-        .gate-title {
-            text-align: center;
-            font-size: 1.6rem;
-            font-weight: 800;
+        /* Headers & Typography */
+        h1, h2, h3 {
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
         }
 
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid var(--border-light);
-            margin-bottom: 20px;
-        }
-
-        .tab-trigger {
-            flex: 1;
-            padding: 10px;
-            background: none;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            color: var(--text-gray);
-            text-align: center;
-        }
-
-        .tab-trigger.active {
-            color: var(--text-dark);
-            border-bottom: 3px solid var(--border-heavy);
-        }
-
-        .input-group {
+        /* Forms & Inputs */
+        .form-group {
             margin-bottom: 15px;
         }
 
-        .input-group label {
+        label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
             margin-bottom: 5px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-heavy);
-            font-size: 1rem;
-            background: var(--bg-main);
-        }
-
-        .submit-button {
-            width: 100%;
-            padding: 12px;
-            background: var(--border-heavy);
-            color: #ffffff;
-            border: 2px solid var(--border-heavy);
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .submit-button:hover {
-            background: var(--bg-main);
-            color: var(--border-heavy);
-        }
-
-        /* --- DASHBOARD STYLES --- */
-        .app-grid {
-            display: grid;
-            grid-template-columns: 220px 1fr;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .side-panel {
-            border-right: 2px solid var(--border-heavy);
-            padding-right: 20px;
-            min-height: 80vh;
-        }
-
-        .app-logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            margin-bottom: 30px;
-        }
-
-        .menu-list {
-            list-style: none;
-        }
-
-        .menu-link {
-            padding: 10px;
-            margin-bottom: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
-
-        .menu-link.active {
-            background: #f0f0f0;
-            border: 1px solid var(--border-heavy);
-        }
-
-        .exit-link {
-            margin-top: 50px;
-            display: inline-block;
-            color: red;
-            font-weight: 700;
-            cursor: pointer;
+            font-weight: bold;
             font-size: 0.9rem;
         }
 
-        .main-panel h2.panel-title {
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            margin-bottom: 5px;
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
         }
 
-        .badge {
+        input:focus, select:focus {
+            background: var(--bg-secondary);
+        }
+
+        /* Buttons & Preview Trigger */
+        button, .btn {
             display: inline-block;
-            padding: 4px 12px;
-            border: 1px solid var(--border-heavy);
+            width: 100%;
+            padding: 12px;
+            background: var(--text-main);
+            color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        button:hover, .btn:hover {
+            background: var(--bg-primary);
+            color: var(--text-main);
+        }
+
+        .secondary-btn {
+            background: var(--bg-primary);
+            color: var(--text-main);
+        }
+
+        .secondary-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Preview Area Link Styling */
+        .preview-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        .preview-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        .preview-divider span {
+            background: var(--bg-primary);
+            padding: 0 10px;
+            position: relative;
+            z-index: 2;
             font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 25px;
+            color: var(--text-muted);
         }
 
-        .stats-row {
+        /* Layout Grid for Dashboard */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 40px;
         }
 
-        .stat-card {
-            border: 2px solid var(--border-heavy);
-            padding: 20px;
-            background: var(--bg-panel);
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .stat-card .label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-gray);
-            font-weight: 700;
+        .panel {
+            border: 2px solid var(--border-color);
+            padding: 15px;
+            background: var(--bg-primary);
         }
 
-        .stat-card .value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-top: 5px;
-        }
-
-        .row-headline {
-            font-size: 1.25rem;
-            text-transform: uppercase;
-            border-bottom: 2px solid var(--border-heavy);
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-        }
-
-        .library-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .blueprint-card {
-            border: 1px solid var(--border-heavy);
-            background: var(--bg-main);
+        /* Blueprint Schematic Graphics */
+        .blueprint-canvas {
+            width: 100%;
+            height: 180px;
+            border: 1px dashed var(--border-color);
+            background: var(--bg-secondary);
             display: flex;
             flex-direction: column;
-        }
-
-        .blueprint-graphic {
-            background: #ebebeb;
-            height: 150px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            border-bottom: 1px solid var(--border-heavy);
+            align-items: center;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .blueprint-graphic svg {
-            width: 70px;
-            height: 70px;
+        .blueprint-canvas::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-linear-gradient: var(--border-color) 1px, transparent 1px;
+            background-size: 20px 20px;
+            opacity: 0.05;
         }
 
-        .blueprint-info {
-            padding: 15px;
+        .machine-line {
+            border: 2px solid var(--border-color);
+            background: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            z-index: 2;
         }
 
-        .tag {
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            background: #000000;
-            color: #ffffff;
-            padding: 2px 6px;
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-
-        .blueprint-info h4 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .blueprint-info p {
+        /* Notification and Restrictions */
+        .alert-box {
+            border: 2px dashed var(--border-color);
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: var(--bg-secondary);
             font-size: 0.85rem;
-            color: var(--text-gray);
-            line-height: 1.4;
         }
 
-        .logger-box {
-            border: 2px solid var(--border-heavy);
-            padding: 20px;
-            background: var(--bg-panel);
+        /* Workout Tracking List */
+        .log-list {
+            list-style: none;
+            margin-top: 10px;
         }
 
-        .logger-inputs {
+        .log-item {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
             display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-
-        .logger-inputs .input-group {
-            flex: 1;
-            min-width: 180px;
-            margin-bottom: 0;
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
 
-    <div id="gateSection">
-        <div class="gate-wrapper">
-            <div class="gate-title">CoreFit Portal</div>
+<div class="container">
+    
+    <div id="auth-screen">
+        <h1>System Sign In / Sign Up</h1>
+        <div class="form-group">
+            <label for="user-age">Enter Age (Required for Workout Calibration)</label>
+            <input type="number" id="user-age" min="1" max="100" placeholder="e.g., 15">
+        </div>
+        <button id="login-btn">Sign In / Register Account</button>
+        
+        <div class="preview-divider">
+            <span>OR TRY WITHOUT AN ACCOUNT</span>
+        </div>
+        
+        <button id="preview-btn" class="secondary-btn">Look at Dashboard (Instant Preview)</button>
+    </div>
+
+    <div id="dashboard-screen" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Gym Analytics Dashboard</h2>
+            <button id="logout-btn" style="width: auto; padding: 5px 15px; margin: 0;">Exit Preview/Sign Out</button>
+        </div>
+
+        <div id="restriction-alert" class="alert-box hidden"></div>
+
+        <div class="dashboard-grid">
             
-            <div class="tabs">
-                <button id="triggerIn" class="tab-trigger active" onclick="toggleGate('in')">Sign In</button>
-                <button id="triggerUp" class="tab-trigger" onclick="toggleGate('up')">Register</button>
+            <div class="panel">
+                <h3>Track New Workout</h3>
+                
+                <div class="form-group">
+                    <label for="machine-select">Select Machine / Exercise</label>
+                    <select id="machine-select">
+                        <option value="Treadmill">Treadmill (Cardio)</option>
+                        <option value="Chest Press">Chest Press (Strength)</option>
+                        <option value="Leg Press">Leg Press (Heavy Strength)</option>
+                        <option value="Lat Pulldown">Lat Pulldown (Upper Body)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="workout-intensity">Intensity / Set Structure</label>
+                    <input type="text" id="workout-intensity" placeholder="e.g., 3 sets x 10 reps">
+                </div>
+
+                <button id="log-workout-btn">Log Activity Session</button>
+
+                <h3 style="margin-top: 25px;">Logged Sessions</h3>
+                <ul id="log-list" class="log-list">
+                    <li class="log-item" id="empty-notice">No workouts tracked yet for this session.</li>
+                </ul>
             </div>
 
-            <form id="gateForm" onsubmit="submitGate(event)">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" class="input-field" required placeholder="user@domain.com">
-                </div>
+            <div class="panel">
+                <h3>Machine Schematic Guides</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Interactive blueprint layout for selected machinery:</p>
                 
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" class="input-field" required placeholder="••••••••">
-                </div>
-
-                <div class="input-group" id="ageGroup" style="display: none;">
-                    <label>Your Age (Determines Equipment Access)</label>
-                    <input type="number" id="userAgeInput" class="input-field" min="1" max="100" value="18">
-                </div>
-
-                <button type="submit" id="gateSubmitBtn" class="submit-button">Enter Platform</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="workspaceSection" class="hidden">
-        <div class="app-grid">
-            
-            <aside class="side-panel">
-                <div class="app-logo">CoreFit</div>
-                <ul class="menu-list">
-                    <li class="menu-link active">Console</li>
-                    <li class="menu-link">Routine</li>
-                    <li class="menu-link">Logs</li>
-                </ul>
-                <div class="exit-link" onclick="exitWorkspace()">← Close Session</div>
-            </aside>
-
-            <main class="main-panel">
-                <h2 class="panel-title">Console Overview</h2>
-                <div class="badge" id="ageProfileBadge">Profile Tier: 18 Years Old</div>
-
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="label">Weekly Completions</div>
-                        <div class="value">4 Tracked</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">Active Time</div>
-                        <div class="value">5.2 Hours</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">Tier Assignment</div>
-                        <div id="tierValue" class="value" style="font-size: 1.2rem;">Standard Layout</div>
+                <div class="blueprint-canvas">
+                    <div id="blueprint-title" class="machine-line">Treadmill Blueprint</div>
+                    <div id="blueprint-graphic" style="margin-top: 15px; font-size: 0.75rem; text-align: center; border-top: 1px solid black; width: 80%; padding-top: 5px;">
+                        [─── RUNNING BELT ───]<br>
+                        │  [MOTOR] ── [CONSOLE]  │
                     </div>
                 </div>
 
-                <h3 class="row-headline">Permitted Gym Floor Configurations</h3>
-                <div class="library-grid" id="libraryGrid">
-                    </div>
-
-                <div class="logger-box">
-                    <h3 class="row-headline" style="font-size: 1rem; margin-bottom: 15px; border: none;">Record Current Activity</h3>
-                    <form onsubmit="event.preventDefault(); alert('Activity saved to workspace successfully.');">
-                        <div class="logger-inputs">
-                            <div class="input-group">
-                                <label>Target Asset / Machine</label>
-                                <input type="text" class="input-field" placeholder="e.g. Seated Row Station" required>
-                            </div>
-                            <div class="input-group">
-                                <label>Metrics (Sets x Reps)</label>
-                                <input type="text" class="input-field" placeholder="3 x 12" required>
-                            </div>
-                            <button type="submit" class="submit-button" style="width: auto; padding: 10px 25px; margin-top: 0;">Log</button>
-                        </div>
-                    </form>
+                <div id="safety-guidelines" style="margin-top: 15px; font-size: 0.8rem; line-height: 1.4;">
+                    <strong>Safety Notice:</strong> Ensure full alignment with the structural base rails before starting execution.
                 </div>
-            </main>
+            </div>
 
         </div>
     </div>
 
-    <script>
-        let formState = 'in';
-        let savedAgeValue = 18;
+</div>
 
-        const equipmentCatalog = [
-            {
-                title: "Chest Press Machine",
-                tag: "fixed-machine",
-                minAge: 15,
-                info: "Position spine firmly against backing. Push grip columns out directly forward along guided track. Pin-drop standard stack mechanism.",
-                svg: `<svg viewBox="0 0 64 64" stroke="#000" stroke-width="2.5" fill="none"><rect x="16" y="12" width="6" height="40"/><rect x="22" y="24" width="20" height="6"/><circle cx="46" cy="27" r="4" fill="#000"/><line x1="28" y1="30" x2="28" y2="48"/></svg>`
-            },
-            {
-                title: "Seated Cable Row",
-                tag: "fixed-machine",
-                minAge: 15,
-                info: "Brace feet firmly against floor pegs. Draw tension grip towards your lower chest line, tracking weight stack along column line smoothly.",
-                svg: `<svg viewBox="0 0 64 64" stroke="#000" stroke-width="2.5" fill="none"><rect x="42" y="12" width="6" height="40"/><path d="M14 44 h20 v4 h-20 z"/><circle cx="24" cy="30" r="4" fill="#000"/><path d="M26 30 Q 36 30 42 24"/></svg>`
-            },
-            {
-                title: "Leg Press Unit",
-                tag: "fixed-machine",
-                minAge: 15,
-                info: "Set lower back flat on angled slide seat. Align feet square on platform array. Disengage manual locking handles with control.",
-                svg: `<svg viewBox="0 0 64 64" stroke="#000" stroke-width="2.5" fill="none"><rect x="14" y="44" width="36" height="6"/><line x1="20" y1="44" x2="40" y2="20"/><rect x="36" y="14" width="12" height="8"/></svg>`
-            },
-            {
-                title: "Dumbbell Set",
-                tag: "free-weight",
-                minAge: 16,
-                info: "Select identical elements matching intended volume. Lift safely from primary tiered horizontal storage bars.",
-                svg: `<svg viewBox="0 0 64 64" stroke="#000" stroke-width="2.5" fill="none"><rect x="16" y="28" width="32" height="8" rx="2"/><rect x="22" y="20" width="4" height="24"/><rect x="38" y="20" width="4" height="24"/></svg>`
-            },
-            {
-                title: "Goblet Loading System",
-                tag: "free-weight",
-                minAge: 16,
-                info: "Anchor standalone weight module cleanly at shoulder frame. Drop hips low, keeping baseline mass planted through heels.",
-                svg: `<svg viewBox="0 0 64 64" stroke="#000" stroke-width="2.5" fill="none"><circle cx="32" cy="16" r="6"/><path d="M22 30 h20 v6 h-20 z"/><line x1="32" y1="36" x2="32" y2="52"/></svg>`
-            },
-            {
-                title: "Olympic Barbell Rig",
-                tag: "advanced-rig",
-                minAge: 20,
-                info: "Unguided structural axis configuration. High balancing demands require manual verification and active secondary assistance profile.",
-                svg: `<svg viewBox="0 0 64 64" stroke="#000" stroke-width="2.5" fill="none"><line x1="10" y1="32" x2="54" y2="32" stroke-width="4"/><rect x="6" y="26" width="4" height="12"/><rect x="54" y="26" width="4" height="12"/><path d="M16 32 v16 M48 32 v16"/></svg>`
-            }
-        ];
+<script>
+    // Elements
+    const authScreen = document.getElementById('auth-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+    const userAgeInput = document.getElementById('user-age');
+    const loginBtn = document.getElementById('login-btn');
+    const previewBtn = document.getElementById('preview-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    const machineSelect = document.getElementById('machine-select');
+    const workoutIntensity = document.getElementById('workout-intensity');
+    const logWorkoutBtn = document.getElementById('log-workout-btn');
+    const logList = document.getElementById('log-list');
+    const emptyNotice = document.getElementById('empty-notice');
+    
+    const restrictionAlert = document.getElementById('restriction-alert');
+    const blueprintTitle = document.getElementById('blueprint-title');
+    const blueprintGraphic = document.getElementById('blueprint-graphic');
 
-        function toggleGate(targetMode) {
-            formState = targetMode;
-            document.getElementById('triggerIn').classList.toggle('active', targetMode === 'in');
-            document.getElementById('triggerUp').classList.toggle('active', targetMode === 'up');
-            document.getElementById('ageGroup').style.display = targetMode === 'up' ? 'block' : 'none';
-            document.getElementById('gateSubmitBtn').innerText = targetMode === 'in' ? 'Enter Platform' : 'Build Profile';
+    let currentAge = null;
+
+    // Blueprint Schematic Database
+    const blueprints = {
+        "Treadmill": {
+            title: "Treadmill Blueprint (Cardio-Frame)",
+            graphic: "[─── RUNNING BELT ───]<br>│  [MOTOR] ── [CONSOLE]  │",
+            safety: "Safety Notice: Ensure clear perimeter. Clip the safety lanyard to clothing before initiating track velocity."
+        },
+        "Chest Press": {
+            title: "Chest Press Structural Grid",
+            graphic: "┌─[WEIGHT STACK]─┐<br>│    └──[SEAT]──┤  <br>o──[HANDLES]──o",
+            safety: "Safety Notice: Adjust bench back position to align axis pin directly with chest midpoint."
+        },
+        "Leg Press": {
+            title: "Heavy Leg Press Layout",
+            graphic: "   / [FOOT PLATE] \\ <br>  / ── [SLED] ── \\ <br>■───[SAFETY CATCH]───■",
+            safety: "Safety Notice: Never lock out knees at structural limit. Always anchor safety stops."
+        },
+        "Lat Pulldown": {
+            title: "Lat Pulldown Machine Profile",
+            graphic: "   ═══[PULL BAR]═══<br>          ║  <br>     ┌─[CABLE]─┐<br>  ■──[THIGH PAD]──■",
+            safety: "Safety Notice: Adjust thigh restraint bars tightly to maintain stability during load phases."
+        }
+    };
+
+    // Age safety configurations
+    function evaluateAgeRestrictions(age) {
+        if (!age) {
+            restrictionAlert.innerHTML = "<strong>Preview Access Mode:</strong> Showing standard configuration settings.";
+            restrictionAlert.classList.remove('hidden');
+            return;
         }
 
-        function submitGate(e) {
-            e.preventDefault();
-            
-            if (formState === 'up') {
-                savedAgeValue = parseInt(document.getElementById('userAgeInput').value) || 18;
-            } else {
-                savedAgeValue = 18; 
-            }
+        if (age < 16) {
+            restrictionAlert.innerHTML = `<strong>Age Limit System Triggered (${age} Years Old):</strong> Heavy machine weight stacks (Leg Press / Heavy Loads) are safety restricted. Focus primarily on bodyweight calibrations and Cardio frames.`;
+            restrictionAlert.classList.remove('hidden');
+        } else {
+            restrictionAlert.innerHTML = `<strong>Age Group Verified (${age}+):</strong> Full facility, free-weight configurations, and structural machine loads unlocked.`;
+            restrictionAlert.classList.remove('hidden');
+        }
+    }
 
-            document.getElementById('gateSection').classList.add('hidden');
-            document.getElementById('workspaceSection').classList.remove('hidden');
+    // Navigation and Preview Management
+    function loadDashboard(ageValue) {
+        currentAge = ageValue ? parseInt(ageValue) : null;
+        authScreen.classList.add('hidden');
+        dashboardScreen.classList.remove('hidden');
+        evaluateAgeRestrictions(currentAge);
+    }
 
-            renderWorkspace();
+    loginBtn.addEventListener('click', () => {
+        if (!userAgeInput.value) {
+            alert('Please specify an accurate age for your safety bracket calibration profile before signing up.');
+            return;
+        }
+        loadDashboard(userAgeInput.value);
+    });
+
+    // Handle Direct Preview Access
+    previewBtn.addEventListener('click', () => {
+        loadDashboard(null); // Load without strict profile requirements
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        dashboardScreen.classList.add('hidden');
+        authScreen.classList.remove('hidden');
+        userAgeInput.value = '';
+        logList.innerHTML = '<li class="log-item" id="empty-notice">No workouts tracked yet for this session.</li>';
+    });
+
+    // Update schematic graphic when selecting different equipment
+    machineSelect.addEventListener('change', (e) => {
+        const selection = e.target.value;
+        if (blueprints[selection]) {
+            blueprintTitle.innerText = blueprints[selection].title;
+            blueprintGraphic.innerHTML = blueprints[selection].graphic;
+            document.getElementById('safety-guidelines').innerHTML = `<strong>Safety Notice:</strong> ${blueprints[selection].safety}`;
+        }
+    });
+
+    // Local Tracking Feature
+    logWorkoutBtn.addEventListener('click', () => {
+        const machine = machineSelect.value;
+        const effort = workoutIntensity.value.trim() || "1 Standard Session Set";
+
+        // Block restricted usage if running in an under-age account structure
+        if (currentAge && currentAge < 16 && machine === "Leg Press") {
+            alert("Action Prevented: High structural load machinery is locked for profiles below 16 years of age.");
+            return;
         }
 
-        function renderWorkspace() {
-            document.getElementById('ageProfileBadge').innerText = `Profile Tier: ${savedAgeValue} Years Old`;
-            
-            const tierValueText = document.getElementById('tierValue');
-            const targetContainer = document.getElementById('libraryGrid');
-            targetContainer.innerHTML = '';
+        const notice = document.getElementById('empty-notice');
+        if (notice) notice.remove();
 
-            let matchedSet = [];
-            
-            if (savedAgeValue <= 15) {
-                tierValueText.innerText = "Machine Access Only";
-                matchedSet = equipmentCatalog.filter(item => item.tag === 'fixed-machine');
-            } 
-            else if (savedAgeValue >= 16 && savedAgeValue <= 19) {
-                tierValueText.innerText = "Mixed Compound Access";
-                matchedSet = equipmentCatalog.filter(item => item.tag === 'fixed-machine' || item.tag === 'free-weight');
-            } 
-            else {
-                tierValueText.innerText = "Unrestricted Profile";
-                matchedSet = equipmentCatalog;
-            }
+        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const li = document.createElement('li');
+        li.className = 'log-item';
+        li.innerHTML = `<span><strong>${machine}</strong> - ${effort}</span> <span style="color: var(--text-muted);">${timestamp}</span>`;
+        logList.appendChild(li);
 
-            matchedSet.forEach(item => {
-                const itemBlock = document.createElement('div');
-                itemBlock.className = 'blueprint-card';
-                itemBlock.innerHTML = `
-                    <div class="blueprint-graphic">
-                        ${item.svg}
-                    </div>
-                    <div class="blueprint-info">
-                        <span class="tag">${item.tag}</span>
-                        <h4>${item.title}</h4>
-                        <p>${item.info}</p>
-                    </div>
-                `;
-                targetContainer.appendChild(itemBlock);
-            });
-        }
+        workoutIntensity.value = '';
+    });
+</script>
 
-        function exitWorkspace() {
-            document.getElementById('workspaceSection').classList.add('hidden');
-            document.getElementById('gateSection').classList.remove('hidden');
-            document.getElementById('gateForm').reset();
-            toggleGate('in');
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            toggleGate('in');
-        });
-    </script>
 </body>
 </html>
