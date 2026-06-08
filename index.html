@@ -870,7 +870,7 @@ const firebaseConfig = {
             return;
         }
 
-        const auth = getAuth();
+        const auth = window.auth;
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 state.email = email;
