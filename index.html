@@ -659,6 +659,60 @@
     </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getStorage } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-QIDHnPFZ8zAkbDX-UKppyr4pPnBBkWU",
+      authDomain: "risefit-68746.firebaseapp.com",
+      projectId: "risefit-68746",
+      storageBucket: "risefit-68746.firebasestorage.app",
+      messagingSenderId: "694414380923",
+      appId: "1:694414380923:web:96d5b6589784622025b7de",
+      measurementId: "G-G4MJDYEB70"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = await isSupported().then(ok => ok ? getAnalytics(app) : null).catch(() => null);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    window.riseFitFirebase = {
+      app,
+      analytics,
+      auth,
+      db,
+      storage,
+      authFns: {
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        onAuthStateChanged
+      },
+      firestoreFns: {
+        doc,
+        getDoc,
+        setDoc
+      }
+    };
+
+    window.dispatchEvent(new CustomEvent("risefit-firebase-ready"));
+  </script>
+
   <script>
     const storeKey = "risefit-state";
     const defaultState = {
@@ -679,6 +733,7 @@
     };
 
     let state = JSON.parse(localStorage.getItem(storeKey) || "null") || structuredClone(defaultState);
+    let firebaseUser = null;
 
     const workouts = [
       { title: "Starter Strength", time: "28 min", level: "Beginner", color: "var(--green)", steps: ["3 min brisk warmup", "3 rounds: 10 squats, 8 incline pushups, 12 glute bridges", "30 sec plank", "Stretch hips and chest"] },
@@ -699,9 +754,49 @@
       "Write down one thing your body helped you do today."
     ];
 
+    function getFirebase() {
+      if (window.riseFitFirebase) return Promise.resolve(window.riseFitFirebase);
+      return new Promise(resolve => {
+        window.addEventListener("risefit-firebase-ready", () => resolve(window.riseFitFirebase), { once: true });
+        setTimeout(() => resolve(window.riseFitFirebase || null), 2500);
+      });
+    }
+
+    async function saveCloud() {
+      if (!firebaseUser || !window.riseFitFirebase) return;
+      const { db, firestoreFns } = window.riseFitFirebase;
+      const { doc, setDoc } = firestoreFns;
+      try {
+        await setDoc(doc(db, "users", firebaseUser.uid), {
+          ...state,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      } catch (error) {
+        console.warn("Firebase save skipped:", error.message);
+      }
+    }
+
+    async function loadCloud(user) {
+      const firebase = await getFirebase();
+      if (!firebase || !user) return;
+      const { db, firestoreFns } = firebase;
+      const { doc, getDoc } = firestoreFns;
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) {
+          state = { ...structuredClone(defaultState), ...snap.data(), email: user.email || state.email };
+          localStorage.setItem(storeKey, JSON.stringify(state));
+          render();
+        }
+      } catch (error) {
+        console.warn("Firebase load skipped:", error.message);
+      }
+    }
+
     function save() {
       localStorage.setItem(storeKey, JSON.stringify(state));
       render();
+      saveCloud();
     }
 
     function $(id) {
@@ -843,7 +938,7 @@
       if (nav) showScreen(nav.dataset.screen);
     });
 
-    $("signIn").onclick = () => {
+    $("signIn").onclick = async () => {
       const email = $("email").value.trim();
       const password = $("password").value;
       if (!email || password.length < 8) {
@@ -851,6 +946,20 @@
         return;
       }
       state.email = email;
+      const firebase = await getFirebase();
+      if (firebase) {
+        const { auth, authFns } = firebase;
+        try {
+          await authFns.signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+          if (error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") {
+            await authFns.createUserWithEmailAndPassword(auth, email, password);
+          } else {
+            alert(`Firebase auth error: ${error.message}`);
+            return;
+          }
+        }
+      }
       save();
       $("auth").classList.add("hidden");
       $("app").classList.remove("hidden");
@@ -936,6 +1045,38 @@
 
     addMessage("Hey, I am your RiseFit coach. Choose GPT-5.2 or Claude Sonnet 4.5, then ask for a workout plan, motivation, food basics, or confidence help.");
     render();
+
+    getFirebase().then(firebase => {
+      if (!firebase) return;
+      firebase.authFns.onAuthStateChanged(firebase.auth, user => {
+        firebaseUser = user;
+        if (user) {
+          state.email = user.email || state.email;
+          loadCloud(user);
+          render();
+          const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const startButton = document.getElementById('startButton');
+
+startButton.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            console.log("Logged in:", userCredential.user);
+            // Add your code here to show the main app interface
+        })
+        .catch((error) => {
+            console.error("Login failed:", error.message);
+            alert("Login failed: " + error.message);
+        });
+});
+        }
+      });
+    });
   </script>
 </body>
 </html>
