@@ -848,9 +848,9 @@ import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/fir
 
  document.addEventListener('DOMContentLoaded', (event) => {
 
-    $("#signIn").onclick = () => {
-        const email = $("#email").value.trim();
-        const password = $("#password").value;
+    document.getElementById('signIn').onclick = () => {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
 
         if (!email || password.length < 8) {
             alert("Use an email and a password with at least 8 characters.");
@@ -862,17 +862,17 @@ import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/fir
             .then((userCredential) => {
                 state.email = email;
                 save();
-                $("#auth").classList.add("hidden");
-                $("#app").classList.remove("hidden");
+                document.getElementById('auth').classList.add("hidden");
+                document.getElementById('app').classList.remove("hidden");
             })
             .catch((error) => {
                 alert(error.message);
             });
     };
 
-    $("#demo").onclick = () => {
-        $("#auth").classList.add("hidden");
-        $("#app").classList.remove("hidden");
+    document.getElementById('demo').onclick = () => {
+        document.getElementById('#auth').classList.add("hidden");
+        document.getElementById('app').classList.remove("hidden");
         save();
     };
 
