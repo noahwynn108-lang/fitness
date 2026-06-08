@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Dashboard</title>
+    <title>Personal Dashboard Portal</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -11,6 +11,7 @@
             --text-color: #ffffff;
             --accent-color: #3b82f6;
             --border-color: #333333;
+            --success-color: #10b981;
         }
 
         * {
@@ -23,9 +24,130 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
             height: 100vh;
             overflow: hidden;
+        }
+
+        /* LANDING / GATEWAY PAGE SCREEN */
+        #landing-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+
+        #landing-screen.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .gateway-card {
+            background-color: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .gateway-card h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gateway-card p {
+            font-size: 0.95rem;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .auth-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .portal-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .portal-btn.primary {
+            background-color: var(--accent-color);
+            color: #ffffff;
+        }
+
+        .portal-btn.primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .portal-btn.secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .portal-btn.secondary:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .portal-btn.explore {
+            background-color: var(--success-color);
+            color: #ffffff;
+            margin-top: 10px;
+        }
+
+        .portal-btn.explore:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 0.8rem;
+            opacity: 0.4;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+
+        /* MAIN APPLICATION CONTAINER */
+        #app-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
         }
 
         /* Sidebar Navigation */
@@ -95,7 +217,7 @@
 
         /* Main Content Area */
         .main-content {
-            flex-1: 1;
+            flex: 1;
             width: calc(100% - 240px);
             padding: 30px;
             overflow-y: auto;
@@ -177,129 +299,197 @@
             text-align: right;
             font-style: italic;
         }
+
+        /* Age Group Selector & Ideas Layout */
+        .age-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .age-btn {
+            background-color: #2a2a2a;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .age-btn.active, .age-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .idea-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed #444;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2 class="dynamic-text">DASHBOARD</h2>
-        <button class="nav-btn active" onclick="switchPage('home')">Home Hub</button>
-        <button class="nav-btn" onclick="switchPage('health')">Health Tracker</button>
-        <button class="nav-btn" onclick="switchPage('mechanics')">Mechanics Lab</button>
-        <button class="nav-btn" onclick="switchPage('projects')">Projects Log</button>
-
-        <div class="settings-panel">
-            <label for="textColorPicker">Change Text Color:</label>
-            <div class="color-picker-wrapper">
-                <input type="color" id="textColorPicker" value="#ffffff" oninput="updateTextColor(this.value)">
-                <span id="colorHex" style="font-size: 0.8rem; opacity: 0.7;">#ffffff</span>
+    <div id="landing-screen">
+        <div class="gateway-card">
+            <h1>Nexus Hub</h1>
+            <p>Your workspace for fitness tracking, mechanical engineering labs, and active project timelines.</p>
+            
+            <div class="auth-btn-group">
+                <button class="portal-btn primary" onclick="enterApp()">Log In</button>
+                <button class="portal-btn secondary" onclick="enterApp()">Register / Sign Up</button>
+                <div class="divider">OR</div>
+                <button class="portal-btn explore" onclick="enterApp()">Explore Workspace</button>
             </div>
         </div>
     </div>
 
-    <div class="main-content">
+
+    <div id="app-container">
         
-        <div id="home" class="page active">
-            <h1 class="dynamic-text">Home Hub</h1>
-            <p style="opacity: 0.7;">Welcome back. Here is a quick snapshot across your modules:</p>
+        <div class="sidebar">
+            <h2 class="dynamic-text">DASHBOARD</h2>
+            <button class="nav-btn active" onclick="switchPage('home')">Home Hub</button>
+            <button class="nav-btn" onclick="switchPage('health')">Health Tracker</button>
+            <button class="nav-btn" onclick="switchPage('ideas')">Gym Ideas</button>
+            <button class="nav-btn" onclick="switchPage('mechanics')">Mechanics Lab</button>
+            <button class="nav-btn" onclick="switchPage('projects')">Projects Log</button>
+
+            <div class="settings-panel">
+                <label for="textColorPicker">Change Text Color:</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="textColorPicker" value="#ffffff" oninput="updateTextColor(this.value)">
+                    <span id="colorHex" style="font-size: 0.8rem; opacity: 0.7;">#ffffff</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
             
-            <div class="grid-container">
-                <div class="card" onclick="switchPage('health')" style="cursor: pointer;">
-                    <h3 class="dynamic-text">Health Summary</h3>
-                    <div class="score-display" style="padding: 10px 0;">
-                        <span class="score-number dynamic-text" style="font-size: 2.5rem;">67</span>
-                        <span class="score-label dynamic-text">/ 100 Overall</span>
+            <div id="home" class="page active">
+                <h1 class="dynamic-text">Home Hub</h1>
+                <p style="opacity: 0.7;">System active. Here is a glance overview across your interactive sub-modules:</p>
+                
+                <div class="grid-container">
+                    <div class="card" onclick="switchPage('health')" style="cursor: pointer;">
+                        <h3 class="dynamic-text">Health Summary</h3>
+                        <div class="score-display" style="padding: 10px 0;">
+                            <span class="score-number dynamic-text" style="font-size: 2.5rem;">67</span>
+                            <span class="score-label dynamic-text">/ 100 Rating</span>
+                        </div>
+                        <p class="view-more-hint">Open full tracker →</p>
                     </div>
-                    <p class="view-more-hint">Click to open full tracker →</p>
-                </div>
 
-                <div class="card" onclick="switchPage('mechanics')" style="cursor: pointer;">
-                    <h3 class="dynamic-text">Mechanics Toolkit</h3>
-                    <ul class="preview-list">
-                        <li class="dynamic-text"><span>Transmission Diagnostics</span><span>Active</span></li>
-                        <li class="dynamic-text"><span>Clutch Wear Ratios</span><span>Calculated</span></li>
-                    </ul>
-                    <p class="view-more-hint">Click to open diagnostics →</p>
-                </div>
+                    <div class="card" onclick="switchPage('ideas')" style="cursor: pointer;">
+                        <h3 class="dynamic-text">Gym &amp; Strategy</h3>
+                        <ul class="preview-list">
+                            <li class="dynamic-text"><span>Active Routine Filters</span><span>Loaded</span></li>
+                            <li class="dynamic-text"><span>Age Brackets Provided</span><span>4 Target Groups</span></li>
+                        </ul>
+                        <p class="view-more-hint">Check age targets →</p>
+                    </div>
 
-                <div class="card" onclick="switchPage('projects')" style="cursor: pointer;">
-                    <h3 class="dynamic-text">Project Status</h3>
-                    <ul class="preview-list">
-                        <li class="dynamic-text"><span>Room Renovation</span><span>100% Completed</span></li>
-                        <li class="dynamic-text"><span>Vehicle Project</span><span>Planning Phase</span></li>
-                    </ul>
-                    <p class="view-more-hint">Click to open log →</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="health" class="page">
-            <h1 class="dynamic-text">Health Tracker</h1>
-            <div class="grid-container">
-                <div class="card">
-                    <h3 class="dynamic-text">Overall Health Rating</h3>
-                    <div class="score-display">
-                        <div class="score-number dynamic-text">67</div>
-                        <div class="score-label dynamic-text">out of 100 points</div>
+                    <div class="card" onclick="switchPage('mechanics')" style="cursor: pointer;">
+                        <h3 class="dynamic-text">Mechanics Toolkit</h3>
+                        <ul class="preview-list">
+                            <li class="dynamic-text"><span>Transmission Systems</span><span>Operational</span></li>
+                            <li class="dynamic-text"><span>Clutch Configurations</span><span>Ready</span></li>
+                        </ul>
+                        <p class="view-more-hint">Open engineering lab →</p>
                     </div>
                 </div>
-                <div class="card">
-                    <h3 class="dynamic-text">Daily Vitals</h3>
-                    <ul class="preview-list">
-                        <li class="dynamic-text"><span>Sleep Duration</span><span>Restless / Limited</span></li>
-                        <li class="dynamic-text"><span>Hydration Target</span><span>1.8L / 2.5L</span></li>
-                        <li class="dynamic-text"><span>Activity Levels</span><span>Moderate</span></li>
-                    </ul>
+            </div>
+
+            <div id="health" class="page">
+                <h1 class="dynamic-text">Health Tracker</h1>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3 class="dynamic-text">Overall Health Rating</h3>
+                        <div class="score-display">
+                            <div class="score-number dynamic-text">67</div>
+                            <div class="score-label dynamic-text">out of 100 calculated points</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="dynamic-text">Vitals &amp; Stature</h3>
+                        <ul class="preview-list">
+                            <li class="dynamic-text"><span>Sleep Profile</span><span>Restless Tracking</span></li>
+                            <li class="dynamic-text"><span>Water Volume Target</span><span>1.8 Litres / 2.5L Max</span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="mechanics" class="page">
-            <h1 class="dynamic-text">Mechanics Lab</h1>
-            <div class="grid-container">
+            <div id="ideas" class="page">
+                <h1 class="dynamic-text">Gym &amp; Routine Ideas</h1>
+                <p style="opacity: 0.7; margin-bottom: 20px;">Select a target age group demographics profile to filter fitness configuration layouts:</p>
+                
+                <div class="age-selector">
+                    <button class="age-btn active" onclick="filterAge('teens')">Teens (13-17)</button>
+                    <button class="age-btn" onclick="filterAge('young')">Young Adults (18-29)</button>
+                    <button class="age-btn" onclick="filterAge('adults')">Adults (30-49)</button>
+                </div>
+
                 <div class="card">
-                    <h3 class="dynamic-text">System Analysis</h3>
-                    <p class="dynamic-text" style="font-size: 0.95rem; line-height: 1.5;">
-                        Configure, troubleshoot, and study torque ratios, mechanical transmission structures, and performance configurations here. Use the sidebar to navigate back to the main portal.
-                    </p>
+                    <h3 class="dynamic-text" id="ideas-heading">Target Framework: Teens (13-17)</h3>
+                    <div id="ideas-content" class="idea-box dynamic-text">
+                        Focus fields emphasize bodyweight conditioning, form discipline, light resistance tracking, structural posture building, and foundational agility exercises perfect for school-level routines.
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="projects" class="page">
-            <h1 class="dynamic-text">Projects Log</h1>
-            <div class="grid-container">
-                <div class="card">
-                    <h3 class="dynamic-text">Active Items</h3>
-                    <ul class="preview-list">
-                        <li class="dynamic-text"><span>Wall Finish &amp; Trim Coat</span><span>Done</span></li>
-                        <li class="dynamic-text"><span>Floor Upgrade Evaluations</span><span>Pending Samples</span></li>
-                    </ul>
+            <div id="mechanics" class="page">
+                <h1 class="dynamic-text">Mechanics Lab</h1>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3 class="dynamic-text">System Assembly Analysis</h3>
+                        <p class="dynamic-text" style="font-size: 0.95rem; line-height: 1.5;">
+                            Configure torque parameters, analyze internal gear configurations, measure clutch engagement tolerances, and track manual transmission layouts. Use the left menu controls to jump between active modules.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
+            <div id="projects" class="page">
+                <h1 class="dynamic-text">Projects Log</h1>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3 class="dynamic-text">Active Structural Items</h3>
+                        <ul class="preview-list">
+                            <li class="dynamic-text"><span>Wall Finishing &amp; Preparation</span><span>100% Complete</span></li>
+                            <li class="dynamic-text"><span>Floor Upgrade Profile Check</span><span>Awaiting Product Samples</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <script>
-        // Page switching mechanism
+        // Entry Trigger from Landing/Gateway Screen
+        function enterApp() {
+            document.getElementById('landing-screen').classList.add('hidden');
+        }
+
+        // Navigation Page Switching Mechanism
         function switchPage(pageId) {
-            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
-            // Deactivate all buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
 
-            // Show current page
             const targetPage = document.getElementById(pageId);
             if(targetPage) {
                 targetPage.classList.add('active');
             }
 
-            // Find matching nav button and set active
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
                 if(btn.getAttribute('onclick').includes(pageId)) {
@@ -308,18 +498,38 @@
             });
         }
 
-        // Fixed Global Text Color function targeting elements explicitly
+        // Age filter configuration logic for the restored section
+        function filterAge(group) {
+            // Manage active button toggle visual highlights
+            document.querySelectorAll('.age-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const heading = document.getElementById('ideas-heading');
+            const content = document.getElementById('ideas-content');
+
+            if(group === 'teens') {
+                heading.innerText = "Target Framework: Teens (13-17)";
+                content.innerText = "Focus fields emphasize bodyweight conditioning, form discipline, light resistance tracking, structural posture building, and foundational agility exercises perfect for school-level routines.";
+            } else if(group === 'young') {
+                heading.innerText = "Target Framework: Young Adults (18-29)";
+                content.innerText = "High-intensity training setups, strength progression schedules, structural muscle building splits (Push/Pull/Legs), and optimization frameworks targeting energy and endurance profiles.";
+            } else if(group === 'adults') {
+                heading.innerText = "Target Framework: Adults (30-49)";
+                content.innerText = "Balanced setups combining functional core strength, injury-prevention protocols, cardiovascular capacity targets, and sustainable flexibility maintenance splits suited for busy agendas.";
+            }
+        }
+
+        // Fully Responsive Color Customizer Configuration
         function updateTextColor(colorValue) {
-            // Update the display text color variable globally
             document.documentElement.style.setProperty('--text-color', colorValue);
             
-            // Explicitly force updating color across all text elements designated dynamic
-            const dynamicElements = document.querySelectorAll('.dynamic-text, .sidebar h2, .nav-btn, .main-content h1, .card p, .preview-list li');
+            const dynamicElements = document.querySelectorAll('.dynamic-text, .sidebar h2, .nav-btn, .main-content h1, .card p, .preview-list li, .idea-box');
             dynamicElements.forEach(element => {
                 element.style.color = colorValue;
             });
 
-            // Update hex label text
             document.getElementById('colorHex').innerText = colorValue.toUpperCase();
         }
     </script>
