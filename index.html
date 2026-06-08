@@ -3,416 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Track & Blueprint Analytics</title>
+    <title>Gym Dashboard Preview</title>
     <style>
-        /* Stable Black & White Theme Base */
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
-            --border-color: #000000;
-            --text-main: #000000;
-            --text-muted: #666666;
-            --accent-glow: rgba(0, 0, 0, 0.05);
-        }
-
+        /* Base Reset & Sleek Dark Theme */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace; /* Blueprint style font */
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            padding: 20px;
+            background-color: #000000;
+            color: #ffffff;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            border: 2px solid var(--border-color);
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: #111111;
+            border-right: 1px solid #222222;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
-            background: var(--bg-primary);
-            box-shadow: 5px 5px 0px var(--border-color);
         }
 
-        /* Utility Hidden Class */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Headers & Typography */
-        h1, h2, h3 {
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #00ff88; /* Accent color for a crisp look */
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 5px;
         }
 
-        /* Forms & Inputs */
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #aaaaaa;
+            text-align: left;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: #222222;
+            color: #00ff88;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: #050505;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 10px;
+        }
+
+        p {
+            color: #cccccc;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Cards/Grid Layout for Dashboard Features */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #111111;
+            border: 1px solid #222222;
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #00ff88;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #00ff88;
+        }
+
+        /* Interactive Elements for the Ideas Tab */
+        .age-selectors {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .age-btn {
+            background-color: #111111;
+            color: #ffffff;
+            border: 1px solid #333333;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .age-btn:hover {
+            border-color: #00ff88;
+            background-color: #161616;
+        }
+
+        .age-btn.active {
+            background-color: #00ff88;
+            color: #000000;
+            border-color: #00ff88;
+            font-weight: bold;
+        }
+
+        .ideas-display {
+            background-color: #111111;
+            border-left: 4px solid #00ff88;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            min-height: 150px;
+        }
+
+        .ideas-display h4 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .ideas-display ul {
+            padding-left: 20px;
+            color: #dddddd;
+        }
+
+        .ideas-display li {
+            margin-bottom: 8px;
+        }
+
+        /* Form styling for the visual Sign-In mockup */
+        .mock-form {
+            max-width: 400px;
+            background-color: #111111;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #222222;
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
 
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
+            color: #aaaaaa;
         }
 
-        input, select {
+        .form-group input {
             width: 100%;
             padding: 10px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-main);
-            font-size: 1rem;
+            background-color: #000000;
+            border: 1px solid #333333;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .form-group input:focus {
             outline: none;
+            border-color: #00ff88;
         }
 
-        input:focus, select:focus {
-            background: var(--bg-secondary);
-        }
-
-        /* Buttons & Preview Trigger */
-        button, .btn {
-            display: inline-block;
+        .submit-btn {
+            background-color: #222222;
+            color: #aaaaaa;
+            border: 1px solid #333333;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: not-allowed; /* Visually indicates it doesn't log you in right now */
             width: 100%;
-            padding: 12px;
-            background: var(--text-main);
-            color: var(--bg-primary);
-            border: 2px solid var(--border-color);
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        button:hover, .btn:hover {
-            background: var(--bg-primary);
-            color: var(--text-main);
-        }
-
-        .secondary-btn {
-            background: var(--bg-primary);
-            color: var(--text-main);
-        }
-
-        .secondary-btn:hover {
-            background: var(--bg-secondary);
-        }
-
-        /* Preview Area Link Styling */
-        .preview-divider {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-        }
-        .preview-divider::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--border-color);
-            z-index: 1;
-        }
-        .preview-divider span {
-            background: var(--bg-primary);
-            padding: 0 10px;
-            position: relative;
-            z-index: 2;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* Layout Grid for Dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .panel {
-            border: 2px solid var(--border-color);
-            padding: 15px;
-            background: var(--bg-primary);
-        }
-
-        /* Blueprint Schematic Graphics */
-        .blueprint-canvas {
-            width: 100%;
-            height: 180px;
-            border: 1px dashed var(--border-color);
-            background: var(--bg-secondary);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .blueprint-canvas::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-linear-gradient: var(--border-color) 1px, transparent 1px;
-            background-size: 20px 20px;
-            opacity: 0.05;
-        }
-
-        .machine-line {
-            border: 2px solid var(--border-color);
-            background: white;
-            padding: 5px 10px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            z-index: 2;
-        }
-
-        /* Notification and Restrictions */
-        .alert-box {
-            border: 2px dashed var(--border-color);
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: var(--bg-secondary);
-            font-size: 0.85rem;
-        }
-
-        /* Workout Tracking List */
-        .log-list {
-            list-style: none;
-            margin-top: 10px;
-        }
-
-        .log-item {
-            padding: 8px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <div id="auth-screen">
-        <h1>System Sign In / Sign Up</h1>
-        <div class="form-group">
-            <label for="user-age">Enter Age (Required for Workout Calibration)</label>
-            <input type="number" id="user-age" min="1" max="100" placeholder="e.g., 15">
-        </div>
-        <button id="login-btn">Sign In / Register Account</button>
-        
-        <div class="preview-divider">
-            <span>OR TRY WITHOUT AN ACCOUNT</span>
-        </div>
-        
-        <button id="preview-btn" class="secondary-btn">Look at Dashboard (Instant Preview)</button>
+    <div class="sidebar">
+        <h2>Gym Portal</h2>
+        <button class="nav-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+        <button class="nav-btn" onclick="switchTab('ideas')">Ideas</button>
+        <button class="nav-btn" onclick="switchTab('account-mock')">Account Setup</button>
     </div>
 
-    <div id="dashboard-screen" class="hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>Gym Analytics Dashboard</h2>
-            <button id="logout-btn" style="width: auto; padding: 5px 15px; margin: 0;">Exit Preview/Sign Out</button>
-        </div>
-
-        <div id="restriction-alert" class="alert-box hidden"></div>
-
-        <div class="dashboard-grid">
+    <div class="main-content">
+        
+        <div id="dashboard" class="tab-content active">
+            <h1>Overview Dashboard</h1>
+            <p>Welcome back to your central hub. All your working panels and features have been fully restored with the sleek dark high-contrast view.</p>
             
-            <div class="panel">
-                <h3>Track New Workout</h3>
-                
-                <div class="form-group">
-                    <label for="machine-select">Select Machine / Exercise</label>
-                    <select id="machine-select">
-                        <option value="Treadmill">Treadmill (Cardio)</option>
-                        <option value="Chest Press">Chest Press (Strength)</option>
-                        <option value="Leg Press">Leg Press (Heavy Strength)</option>
-                        <option value="Lat Pulldown">Lat Pulldown (Upper Body)</option>
-                    </select>
+            <div class="grid">
+                <div class="card">
+                    <h3>Active Routines</h3>
+                    <p>Track your standard splits, push/pull distribution, and heavy compounds.</p>
                 </div>
-
-                <div class="form-group">
-                    <label for="workout-intensity">Intensity / Set Structure</label>
-                    <input type="text" id="workout-intensity" placeholder="e.g., 3 sets x 10 reps">
+                <div class="card">
+                    <h3>Progress Metrics</h3>
+                    <p>Monitor volume metrics, progressive overload data, and key lift tracking.</p>
                 </div>
-
-                <button id="log-workout-btn">Log Activity Session</button>
-
-                <h3 style="margin-top: 25px;">Logged Sessions</h3>
-                <ul id="log-list" class="log-list">
-                    <li class="log-item" id="empty-notice">No workouts tracked yet for this session.</li>
-                </ul>
-            </div>
-
-            <div class="panel">
-                <h3>Machine Schematic Guides</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Interactive blueprint layout for selected machinery:</p>
-                
-                <div class="blueprint-canvas">
-                    <div id="blueprint-title" class="machine-line">Treadmill Blueprint</div>
-                    <div id="blueprint-graphic" style="margin-top: 15px; font-size: 0.75rem; text-align: center; border-top: 1px solid black; width: 80%; padding-top: 5px;">
-                        [─── RUNNING BELT ───]<br>
-                        │  [MOTOR] ── [CONSOLE]  │
-                    </div>
-                </div>
-
-                <div id="safety-guidelines" style="margin-top: 15px; font-size: 0.8rem; line-height: 1.4;">
-                    <strong>Safety Notice:</strong> Ensure full alignment with the structural base rails before starting execution.
+                <div class="card">
+                    <h3>Nutrition Sync</h3>
+                    <p>Log macros, target caloric intake thresholds, and hydration logs.</p>
                 </div>
             </div>
-
         </div>
+
+        <div id="ideas" class="tab-content">
+            <h1>Ideas for the Gym</h1>
+            <p>Select a category below to filter tailored workout philosophies, structure ideas, and progression patterns without having to input your personal age.</p>
+            
+            <div class="age-selectors">
+                <button class="age-btn" onclick="showIdeas('youth', this)">Teens / Beginners</button>
+                <button class="age-btn" onclick="showIdeas('adult', this)">Adults / Intermediates</button>
+                <button class="age-btn" onclick="showIdeas('advanced', this)">Advanced Lifters</button>
+            </div>
+
+            <div class="ideas-display" id="ideasBox">
+                <h4 id="ideasTitle">Select a Group</h4>
+                <div id="ideasContent">Click one of the categories above to load specific layout structures and training ideas instantly.</div>
+            </div>
+        </div>
+
+        <div id="account-mock" class="tab-content">
+            <h1>Account Configuration</h1>
+            <p>This panel is a visual preview of what the login gate will look like once your secure database back-end is fully integrated. Submitting here will intentionally not alter your session.</p>
+            
+            <div class="mock-form">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="name@example.com" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••" disabled>
+                </div>
+                <button class="submit-btn" disabled>Sign In Disabled (Preview Mode)</button>
+            </div>
+        </div>
+
     </div>
 
-</div>
-
-<script>
-    // Elements
-    const authScreen = document.getElementById('auth-screen');
-    const dashboardScreen = document.getElementById('dashboard-screen');
-    const userAgeInput = document.getElementById('user-age');
-    const loginBtn = document.getElementById('login-btn');
-    const previewBtn = document.getElementById('preview-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    
-    const machineSelect = document.getElementById('machine-select');
-    const workoutIntensity = document.getElementById('workout-intensity');
-    const logWorkoutBtn = document.getElementById('log-workout-btn');
-    const logList = document.getElementById('log-list');
-    const emptyNotice = document.getElementById('empty-notice');
-    
-    const restrictionAlert = document.getElementById('restriction-alert');
-    const blueprintTitle = document.getElementById('blueprint-title');
-    const blueprintGraphic = document.getElementById('blueprint-graphic');
-
-    let currentAge = null;
-
-    // Blueprint Schematic Database
-    const blueprints = {
-        "Treadmill": {
-            title: "Treadmill Blueprint (Cardio-Frame)",
-            graphic: "[─── RUNNING BELT ───]<br>│  [MOTOR] ── [CONSOLE]  │",
-            safety: "Safety Notice: Ensure clear perimeter. Clip the safety lanyard to clothing before initiating track velocity."
-        },
-        "Chest Press": {
-            title: "Chest Press Structural Grid",
-            graphic: "┌─[WEIGHT STACK]─┐<br>│    └──[SEAT]──┤  <br>o──[HANDLES]──o",
-            safety: "Safety Notice: Adjust bench back position to align axis pin directly with chest midpoint."
-        },
-        "Leg Press": {
-            title: "Heavy Leg Press Layout",
-            graphic: "   / [FOOT PLATE] \\ <br>  / ── [SLED] ── \\ <br>■───[SAFETY CATCH]───■",
-            safety: "Safety Notice: Never lock out knees at structural limit. Always anchor safety stops."
-        },
-        "Lat Pulldown": {
-            title: "Lat Pulldown Machine Profile",
-            graphic: "   ═══[PULL BAR]═══<br>          ║  <br>     ┌─[CABLE]─┐<br>  ■──[THIGH PAD]──■",
-            safety: "Safety Notice: Adjust thigh restraint bars tightly to maintain stability during load phases."
-        }
-    };
-
-    // Age safety configurations
-    function evaluateAgeRestrictions(age) {
-        if (!age) {
-            restrictionAlert.innerHTML = "<strong>Preview Access Mode:</strong> Showing standard configuration settings.";
-            restrictionAlert.classList.remove('hidden');
-            return;
+    <script>
+        // Simple client-side routing to switch tabs smoothly
+        function switchTab(tabId) {
+            // Hide all tabs
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active style from all navigation buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Activate the selected tab and corresponding sidebar button
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        if (age < 16) {
-            restrictionAlert.innerHTML = `<strong>Age Limit System Triggered (${age} Years Old):</strong> Heavy machine weight stacks (Leg Press / Heavy Loads) are safety restricted. Focus primarily on bodyweight calibrations and Cardio frames.`;
-            restrictionAlert.classList.remove('hidden');
-        } else {
-            restrictionAlert.innerHTML = `<strong>Age Group Verified (${age}+):</strong> Full facility, free-weight configurations, and structural machine loads unlocked.`;
-            restrictionAlert.classList.remove('hidden');
+        // Populates the "Ideas for the Gym" box dynamically based on the button clicked
+        function showIdeas(group, element) {
+            // Highlight the active button group
+            const ageButtons = document.querySelectorAll('.age-btn');
+            ageButtons.forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            const title = document.getElementById('ideasTitle');
+            const content = document.getElementById('ideasContent');
+
+            // Update content based on selection
+            if (group === 'youth') {
+                title.textContent = "Teens & Beginner Frameworks";
+                content.innerHTML = `
+                    <ul>
+                        <li><strong>Foundation First:</strong> Focus heavily on learning proper form using bodyweight movements and light compound exercises.</li>
+                        <li><strong>Consistency Over Intensity:</strong> Build a sustainable habit of 2-3 sessions per week before scaling heavy tracking.</li>
+                        <li><strong>Core Mechanics:</strong> Introduction to standard linear progression models for squats, rows, and overhead mechanics.</li>
+                    </ul>
+                `;
+            } else if (group === 'adult') {
+                title.textContent = "Adults & Intermediate Layouts";
+                content.innerHTML = `
+                    <ul>
+                        <li><strong>Hypertrophy Splits:</strong> Utilization of Upper/Lower or Push-Pull-Legs (PPL) setups to scale weekly volume efficiently.</li>
+                        <li><strong>Progressive Overload:</strong> Focused metric tracking ensuring small increments in weight or repetitions week-over-week.</li>
+                        <li><strong>Recovery Optimization:</strong> Balanced structuring to accommodate work schedules and ensure proper systemic recovery.</li>
+                    </ul>
+                `;
+            } else if (group === 'advanced') {
+                title.textContent = "Advanced Trainee Strategies";
+                content.innerHTML = `
+                    <ul>
+                        <li><strong>Periodization Models:</strong> Implementing block periodization to strategically peak strength and break through performance plateaus.</li>
+                        <li><strong>Autoregulation:</strong> Using RPE (Rate of Perceived Exertion) and RIR (Reps in Reserve) to adjust intensity based on daily recovery capacity.</li>
+                        <li><strong>Targeted Isolation:</strong> High-specificity accessory choices directly complementing complex compound weak points.</li>
+                    </ul>
+                `;
+            }
         }
-    }
-
-    // Navigation and Preview Management
-    function loadDashboard(ageValue) {
-        currentAge = ageValue ? parseInt(ageValue) : null;
-        authScreen.classList.add('hidden');
-        dashboardScreen.classList.remove('hidden');
-        evaluateAgeRestrictions(currentAge);
-    }
-
-    loginBtn.addEventListener('click', () => {
-        if (!userAgeInput.value) {
-            alert('Please specify an accurate age for your safety bracket calibration profile before signing up.');
-            return;
-        }
-        loadDashboard(userAgeInput.value);
-    });
-
-    // Handle Direct Preview Access
-    previewBtn.addEventListener('click', () => {
-        loadDashboard(null); // Load without strict profile requirements
-    });
-
-    logoutBtn.addEventListener('click', () => {
-        dashboardScreen.classList.add('hidden');
-        authScreen.classList.remove('hidden');
-        userAgeInput.value = '';
-        logList.innerHTML = '<li class="log-item" id="empty-notice">No workouts tracked yet for this session.</li>';
-    });
-
-    // Update schematic graphic when selecting different equipment
-    machineSelect.addEventListener('change', (e) => {
-        const selection = e.target.value;
-        if (blueprints[selection]) {
-            blueprintTitle.innerText = blueprints[selection].title;
-            blueprintGraphic.innerHTML = blueprints[selection].graphic;
-            document.getElementById('safety-guidelines').innerHTML = `<strong>Safety Notice:</strong> ${blueprints[selection].safety}`;
-        }
-    });
-
-    // Local Tracking Feature
-    logWorkoutBtn.addEventListener('click', () => {
-        const machine = machineSelect.value;
-        const effort = workoutIntensity.value.trim() || "1 Standard Session Set";
-
-        // Block restricted usage if running in an under-age account structure
-        if (currentAge && currentAge < 16 && machine === "Leg Press") {
-            alert("Action Prevented: High structural load machinery is locked for profiles below 16 years of age.");
-            return;
-        }
-
-        const notice = document.getElementById('empty-notice');
-        if (notice) notice.remove();
-
-        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const li = document.createElement('li');
-        li.className = 'log-item';
-        li.innerHTML = `<span><strong>${machine}</strong> - ${effort}</span> <span style="color: var(--text-muted);">${timestamp}</span>`;
-        logList.appendChild(li);
-
-        workoutIntensity.value = '';
-    });
-</script>
-
+    </script>
 </body>
 </html>
