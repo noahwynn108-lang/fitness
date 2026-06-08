@@ -94,6 +94,36 @@
         .btn:hover { 
             background: #4f46e5; 
         }
+        
+        /* Multi-Tab Styles */
+        .tabs { 
+            display: flex; 
+            justify-content: center; 
+            gap: 1rem; 
+            margin: 2rem 0; 
+            border-bottom: 1px solid #334155; 
+            padding-bottom: 1rem; 
+        }
+        .tab-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            padding: 0.5rem 1rem; 
+            transition: all 0.2s; 
+        }
+        .tab-btn.active, .tab-btn:hover { 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--primary); 
+        }
+        .tab-content { 
+            display: none; 
+        }
+        .tab-content.active { 
+            display: block; 
+        }
+
         .preview-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -110,6 +140,32 @@
             color: var(--primary); 
             margin-bottom: 1rem; 
         }
+
+        /* Form Styles */
+        .auth-form {
+            max-width: 400px;
+            margin: 3rem auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            background: var(--bg);
+            color: var(--text);
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -118,32 +174,118 @@
     <header>
         <div class="logo">RiseFit</div>
         <nav class="nav-links">
-            <button id="loginBtn">Sign In</button>
-            <button id="signupBtn">Sign Up</button>
+            <button id="navLoginBtn">Sign In</button>
+            <button id="navSignupBtn">Sign Up</button>
         </nav>
     </header>
 
-    <div class="hero">
-        <h1>Your AI Fitness & Confidence Coach</h1>
-        <p>Get personalized workout routines, nutrition plans, and mental coaching tailored just for you.</p>
-        <a href="#features" class="btn">Explore Features</a>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('home')">Home</button>
+        <button class="tab-btn" onclick="switchTab('features')">Features</button>
+        <button class="tab-btn" onclick="switchTab('tracker')">Tracker</button>
     </div>
 
-    <div class="preview-grid" id="features">
-        <div class="card">
-            <h3>AI Workouts</h3>
-            <p>Custom exercise routines adapted to your fitness level and goals.</p>
+    <!-- Home Tab -->
+    <div id="homeTab" class="tab-content active">
+        <div class="hero">
+            <h1>Your AI Fitness & Confidence Coach</h1>
+            <p>Get personalized workout routines, nutrition plans, and mental coaching tailored just for you.</p>
+            <button class="btn" onclick="switchTab('features')">Explore Features</button>
         </div>
-        <div class="card">
-            <h3>Nutrition Plans</h3>
-            <p>Daily meal suggestions and recipes designed to fuel your progress.</p>
+    </div>
+
+    <!-- Features Tab -->
+    <div id="featuresTab" class="tab-content">
+        <div class="preview-grid">
+            <div class="card">
+                <h3>AI Workouts</h3>
+                <p>Custom exercise routines adapted to your fitness level and goals.</p>
+            </div>
+            <div class="card">
+                <h3>Nutrition Plans</h3>
+                <p>Daily meal suggestions and recipes designed to fuel your progress.</p>
+            </div>
+            <div class="card">
+                <h3>Confidence Coaching</h3>
+                <p>Mindset exercises and motivation to help you stay unstoppable.</p>
+            </div>
         </div>
-        <div class="card">
-            <h3>Confidence Coaching</h3>
-            <p>Mindset exercises and motivation to help you stay unstoppable.</p>
+    </div>
+
+    <!-- Tracker Tab -->
+    <div id="trackerTab" class="tab-content">
+        <div class="preview-grid">
+            <div class="card">
+                <h3>Workout Logs</h3>
+                <p>Track your daily exercises and completed sets here.</p>
+            </div>
+            <div class="card">
+                <h3>Meal Tracker</h3>
+                <p>Monitor your daily nutrition and calorie intake.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In Page -->
+    <div id="loginPage" class="tab-content">
+        <div class="auth-form">
+            <h2>Sign In</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter your password">
+            </div>
+            <button class="btn">Sign In</button>
+        </div>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div id="signupPage" class="tab-content">
+        <div class="auth-form">
+            <h2>Create an Account</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password">
+            </div>
+            <button class="btn">Sign Up</button>
         </div>
     </div>
 </div>
+
+<script>
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+        if (tabName === 'home') {
+            document.getElementById('homeTab').classList.add('active');
+            document.querySelector('.tab-btn').classList.add('active');
+        } else if (tabName === 'features') {
+            document.getElementById('featuresTab').classList.add('active');
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        } else if (tabName === 'tracker') {
+            document.getElementById('trackerTab').classList.add('active');
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        }
+    }
+
+    document.getElementById('navLoginBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById('loginPage').classList.add('active');
+    });
+
+    document.getElementById('navSignupBtn').addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById('signupPage').classList.add('active');
+    });
+</script>
 
 </body>
 </html>
