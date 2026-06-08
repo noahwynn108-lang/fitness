@@ -3,416 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern App Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>CoreFit Dashboard</title>
     <style>
-        /* --- RESET & BASE STYLES --- */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9f9f9;
+            --border-color: #e5e5e5;
+            --text-primary: #111111;
+            --text-muted: #666666;
+            --accent: #000000;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #f9f9f9;
-            color: #111111;
-            overflow-x: hidden;
-            height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
         }
 
-        /* --- LANDING / FRONT INTERFACE --- */
-        #landing-page {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 2rem;
-            background-color: #ffffff;
-            transition: opacity 0.4s ease;
         }
 
-        .hero-container {
+        .hidden {
+            display: none !important;
+        }
+
+        .auth-card {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2.5rem;
+            border: 1px solid var(--accent);
+            background: var(--bg-primary);
+            box-shadow: 6px 6px 0px var(--accent);
+        }
+
+        .auth-header {
+            margin-bottom: 2rem;
             text-align: center;
-            max-width: 600px;
-            width: 100%;
         }
 
-        .hero-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.05em;
+        .auth-header h2 {
+            font-size: 1.75rem;
             text-transform: uppercase;
-            margin-bottom: 3rem;
-            border: 2px solid #111111;
-            display: inline-block;
-            padding: 0.5rem 1rem;
+            letter-spacing: 1px;
+            font-weight: 800;
         }
 
-        .hero-title {
-            font-size: 2.75rem;
+        .auth-toggle-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: none;
+            border: none;
             font-weight: 600;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .form-group {
             margin-bottom: 1.25rem;
-            color: #111111;
         }
 
-        .hero-subtitle {
-            font-size: 1.05rem;
-            color: #666666;
-            margin-bottom: 2.5rem;
-            font-weight: 400;
-            line-height: 1.6;
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
 
-        /* Modern Black & White Buttons */
-        .btn-container {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
         }
 
-        .btn-primary {
-            background-color: #111111;
-            color: #ffffff;
-            border: 2px solid #111111;
-            padding: 0.85rem 2rem;
-            font-size: 0.95rem;
-            font-weight: 500;
+        .form-control:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-prime {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--accent);
+            color: white;
+            border: 1px solid var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .btn-primary:hover {
-            background-color: #ffffff;
-            color: #111111;
+        .btn-prime:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
         }
 
-        .btn-secondary {
-            background-color: #ffffff;
-            color: #111111;
-            border: 2px solid #111111;
-            padding: 0.85rem 2rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+            min-height: 90vh;
         }
 
-        .btn-secondary:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* --- MAIN APP LAYOUT (HIDDEN BY DEFAULT) --- */
-        #app-layout {
-            display: none; /* Controlled by JavaScript */
-            height: 100vh;
-            grid-template-columns: 260px 1fr;
-        }
-
-        /* --- SIDEBAR --- */
         .sidebar {
-            background-color: #ffffff;
-            border-right: 1px solid #e5e5e5;
-            display: flex;
-            flex-direction: column;
-            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--border-color);
+            padding-right: 1.5rem;
         }
 
-        .sidebar-brand {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.04em;
-            margin-bottom: 3rem;
+        .brand-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 2rem;
             text-transform: uppercase;
         }
 
         .nav-list {
             list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
         }
 
         .nav-item {
             padding: 0.75rem 1rem;
-            color: #555555;
-            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
             font-weight: 500;
             cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s ease;
+            border: 1px solid transparent;
         }
 
-        .nav-item:hover, .nav-item.active {
-            background-color: #f0f0f0;
-            color: #111111;
+        .nav-item.active {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            font-weight: 700;
         }
 
-        .sidebar-footer {
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e5e5;
-        }
-
-        .btn-logout {
-            background: none;
-            border: none;
-            color: #999999;
-            font-size: 0.9rem;
+        .logout-btn {
+            margin-top: 4rem;
+            color: #d9383a;
             cursor: pointer;
-            text-align: left;
-            padding: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
-        .btn-logout:hover {
-            color: #111111;
-        }
-
-        /* --- MAIN CONTENT AREA --- */
         .main-content {
-            padding: 2.5rem;
-            overflow-y: auto;
-            background-color: #f9f9f9;
+            padding-left: 0.5rem;
         }
 
-        .page-header {
+        .content-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e5e5e5;
+            align-items: baseline;
         }
 
-        .page-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
+        .user-welcome-badge {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
         }
 
-        /* --- DASHBOARD VIEWS --- */
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        /* Grid for Cards */
-        .dashboard-grid {
+        .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
 
-        .card {
-            background: #ffffff;
-            border: 1px solid #e5e5e5;
+        .metric-box {
+            border: 1px solid var(--border-color);
             padding: 1.5rem;
+            background: var(--bg-secondary);
+            position: relative;
+        }
+
+        .metric-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 0.25rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 0.25rem;
+        }
+
+        .workout-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .exercise-card {
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-visual {
+            background: #ebebeb;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-visual svg {
+            width: 64px;
+            height: 64px;
+            fill: #333333;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+            flex-grow: 1;
+        }
+
+        .exercise-type-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #000;
+            color: #fff;
+            padding: 0.15rem 0.5rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
         }
 
         .card-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #666666;
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-
-        .card-value {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-        }
-
-        /* Progress Bar Card Specifics */
-        .progress-container {
-            width: 100%;
-            background-color: #f0f0f0;
-            height: 8px;
-            margin-top: 1rem;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            width: 67%; /* requested 67% */
-            height: 100%;
-            background-color: #111111;
-            transition: width 0.4s ease;
-        }
-
-        .card-meta {
-            font-size: 0.85rem;
-            color: #666666;
-            margin-top: 0.5rem;
-        }
-
-        /* --- FORM STYLES (Settings / Form Views) --- */
-        .form-group {
-            margin-bottom: 1.25rem;
-            max-width: 500px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
-            color: #333333;
         }
 
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 0.95rem;
-            border: 1px solid #cccccc;
-            background-color: #ffffff;
-            outline: none;
-            transition: border-color 0.2s;
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
 
-        .form-group input:focus, .form-group select:focus {
-            border-color: #111111;
+        .log-section {
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            margin-top: 2.5rem;
+        }
+
+        .log-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 120px;
+            gap: 1rem;
+            align-items: flex-end;
         }
     </style>
 </head>
 <body>
 
-    <div id="landing-page">
-        <div class="hero-container">
-            <div class="hero-logo">CORE</div>
-            <h1 class="hero-title">A simplified approach to your workflow.</h1>
-            <p class="hero-subtitle">Clean design meets reliable data execution. Experience a workspace engineered to be fast, clear, and perfectly balanced.</p>
-            
-            <div class="btn-container">
-                <button class="btn-primary" onclick="enterApp()">Demo Dashboard</button>
-                <button class="btn-secondary" onclick="alert('Sign-in features are simulated. Click Demo Dashboard to test!')">Sign In</button>
+    <div id="authGate" class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>CoreFit Portal</h2>
             </div>
+            
+            <div class="auth-toggle-tabs">
+                <button id="tabSignIn" class="tab-btn active" onclick="switchAuthTab('signin')">Sign In</button>
+                <button id="tabSignUp" class="tab-btn" onclick="switchAuthTab('signup')">Register</button>
+            </div>
+
+            <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                <div class="form-group">
+                    <label for="authEmail">Email Address</label>
+                    <input type="email" id="authEmail" class="form-control" placeholder="name@domain.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group" id="ageFieldGroup">
+                    <label for="authAge">Your Age (For Tailored Library)</label>
+                    <input type="number" id="authAge" class="form-control" min="1" max="120" value="18">
+                </div>
+
+                <button type="submit" id="authSubmitBtn" class="btn-prime" style="margin-top: 1rem;">Explore Features</button>
+            </form>
         </div>
     </div>
 
-    <div id="app-layout">
-        
-        <aside class="sidebar">
-            <div class="sidebar-brand">CORE // APP</div>
+    <div id="appDashboard" class="container hidden">
+        <div class="dashboard-layout">
             
-            <ul class="nav-list">
-                <li class="nav-item active" onclick="switchView('dashboard', this)">Overview</li>
-                <li class="nav-item" onclick="switchView('analytics', this)">Analytics</li>
-                <li class="nav-item" onclick="switchView('settings', this)">Settings</li>
-            </ul>
+            <aside class="sidebar">
+                <div class="brand-title">CoreFit</div>
+                <ul class="nav-list">
+                    <li class="nav-item active">Dashboard</li>
+                    <li class="nav-item">Workouts</li>
+                    <li class="nav-item">History Logs</li>
+                    <li class="nav-item">Analytics</li>
+                </ul>
+                <div class="logout-btn" onclick="logoutSession()">← Exit Portal</div>
+            </aside>
 
-            <div class="sidebar-footer">
-                <button class="btn-logout" onclick="exitApp()">← Back to Front</button>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            
-            <div id="view-dashboard" class="view-section active">
-                <div class="page-header">
-                    <h2 class="page-title">Overview</h2>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-title">Project Progress</div>
-                        <div class="card-value">67%</div>
-                        <div class="progress-container">
-                            <div class="progress-bar"></div>
-                        </div>
-                        <div class="card-meta">Current sprint target</div>
+            <main class="main-content">
+                <header class="content-header">
+                    <div>
+                        <h1>Console View</h1>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Your personalized fitness baseline tracks below.</p>
                     </div>
+                    <div class="user-welcome-badge" id="welcomeBadge">User: 18 y/o</div>
+                </header>
 
-                    <div class="card">
-                        <div class="card-title">Active Systems</div>
-                        <div class="card-value">12 / 12</div>
-                        <div class="card-meta">All integrations operational</div>
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">Completed This Week</div>
+                        <div class="metric-value">4 Sessions</div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-title">Response Rate</div>
-                        <div class="card-value">94.2ms</div>
-                        <div class="card-meta">Optimized data pipeline</div>
+                    <div class="metric-box">
+                        <div class="metric-label">Total Gym Hours</div>
+                        <div class="metric-value">5.2 hrs</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Target Goal Plan</div>
+                        <div id="metricPlanType" class="metric-value" style="font-size: 1.25rem; margin-top: 0.6rem; text-transform: uppercase;">Standard</div>
                     </div>
                 </div>
-            </div>
 
-            <div id="view-analytics" class="view-section">
-                <div class="page-header">
-                    <h2 class="page-title">Analytics</h2>
-                </div>
-                <div class="card" style="max-width: 100%;">
-                    <div class="card-title">System Activity Logs</div>
-                    <p style="color: #555555; line-height: 1.6; margin-bottom: 1rem;">Everything is loading seamlessly. The layout is optimized to stay completely fixed and glitch-free during interactions.</p>
-                </div>
-            </div>
+                <section>
+                    <h2 class="section-title">Recommended Workout Plan</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                        Tailored suggestions generated securely based on safety guidelines for your current age tier. Look for these specific configurations when entering the floor:
+                    </p>
+                    <div class="workout-showcase" id="exerciseContainer">
+                    </div>
+                </section>
 
-            <div id="view-settings" class="view-section">
-                <div class="page-header">
-                    <h2 class="page-title">Settings</h2>
-                </div>
-                <div class="card" style="max-width: 100%;">
-                    <div class="card-title" style="margin-bottom: 1.5rem;">User Configuration</div>
-                    <form onsubmit="event.preventDefault();">
-                        <div class="form-group">
-                            <label>Interface Mode</label>
-                            <select id="theme-select">
-                                <option>Black and White (Default)</option>
-                                <option disabled>Dark High-Contrast (Premium)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Notification Email</label>
-                            <input type="email" placeholder="user@domain.com" value="demo.user@core.io" readonly>
+                <section class="log-section">
+                    <h3 class="section-title" style="font-size: 1rem; margin-bottom: 1rem;">Log Current Session Entry</h3>
+                    <form onsubmit="event.preventDefault(); alert('Session Entry Saved Successfully!');">
+                        <div class="log-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Exercise / Machine</label>
+                                <input type="text" class="form-control" placeholder="e.g. Chest Press Machine" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Target Sets x Reps</label>
+                                <input type="text" class="form-control" placeholder="3 sets x 12 reps" required>
+                            </div>
+                            <button type="submit" class="btn-prime">Log</button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </section>
+            </main>
 
-        </main>
+        </div>
     </div>
 
     <script>
-        // Switches view from the front interface to the actual application
-        function enterApp() {
-            document.getElementById('landing-page').style.display = 'none';
-            document.getElementById('app-layout').style.display = 'grid';
+        let currentMode = 'signin';
+        let userAge = 18;
+
+        const exerciseDatabase = [
+            {
+                name: "Chest Press Machine",
+                type: "machine",
+                minAge: 15,
+                desc: "Sit flat against the back pad. Push handles away smoothly. Look for a vertical stack with a pin selector.",
+                svg: `<svg viewBox="0 0 64 64"><rect x="16" y="12" width="6" height="40"/><rect x="22" y="24" width="20" height="6"/><circle cx="46" cy="27" r="4"/><line x1="28" y1="30" x2="28" y2="48" stroke="#000" stroke-width="4"/></svg>`
+            },
+            {
+                name: "Seated Cable Row",
+                type: "machine",
+                minAge: 15,
+                desc: "Sit facing the weight tower with feet resting on front braces. Pull the handle attachments towards your lower chest line.",
+                svg: `<svg viewBox="0 0 64 64"><rect x="42" y="12" width="6" height="40"/><path d="M14 44 h20 v4 h-20 z"/><circle cx="24" cy="30" r="4"/><path d="M26 30 Q 36 30 42 24" stroke="#000" stroke-width="2" fill="none"/></svg>`
+            },
+            {
+                name: "Leg Press Assembly",
+                type: "machine",
+                minAge: 15,
+                desc: "Place feet shoulder-width apart on the sled plate. Release safety hooks and lower knees to 90 degrees gently.",
+                svg: `<svg viewBox="0 0 64 64"><rect x="14" y="44" width="36" height="6"/><line x1="20" y1="44" x2="40" y2="20" stroke="#000" stroke-width="4"/><rect x="36" y="14" width="12" height="8"/></svg>`
+            },
+            {
+                name: "Dumbbell Bicep Curl",
+                type: "free-weight",
+                minAge: 16,
+                desc: "Pick two matching dumbbells from the free-weight rack. Stand tall, keep elbows locked to sides, and curl upward.",
+                svg: `<svg viewBox="0 0 64 64"><rect x="16" y="28" width="32" height="8" rx="3"/><rect x="22" y="20" width="4" height="24"/><rect x="38" y="20" width="4" height="24"/></svg>`
+            },
+            {
+                name: "Goblet Squats",
+                type: "free-weight",
+                minAge: 16,
+                desc: "Hold a single heavy dumbbell vertically at your chest level like a goblet. Keep heels planted flat and drop hips low.",
+                svg: `<svg viewBox="0 0 64 64"><circle cx="32" cy="16" r="6"/><path d="M22 30 h20 v6 h-20 z"/><line x1="32" y1="36" x2="32" y2="52" stroke="#000" stroke-width="4"/></svg>`
+            },
+            {
+                name: "Barbell Bench Press",
+                type: "advanced",
+                minAge: 20,
+                desc: "Full unguided free barbell movement. Requires advanced balancing, core engagement and ideally an explicit human spotter.",
+                svg: `<svg viewBox="0 0 64 64"><line x1="10" y1="32" x2="54" y2="32" stroke="#000" stroke-width="4"/><rect x="6" y="26" width="4" height="12"/><rect x="54" y="26" width="4" height="12"/><path d="M16 32 v16 M48 32 v16" stroke="#000" stroke-width="2"/></svg>`
+            }
+        ];
+
+        function switchAuthTab(tab) {
+            currentMode = tab;
+            const tabSignIn = document.getElementById('tabSignIn');
+            const tabSignUp = document.getElementById('tabSignUp');
+            const ageFieldGroup = document.getElementById('ageFieldGroup');
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
+
+            if (tab === 'signin') {
+                tabSignIn.classList.add('active');
+                tabSignUp.classList.remove('active');
+                ageFieldGroup.style.display = 'none';
+                authSubmitBtn.innerText = 'Explore Features';
+            } else {
+                tabSignUp.classList.add('active');
+                tabSignIn.classList.remove('active');
+                ageFieldGroup.style.display = 'block';
+                authSubmitBtn.innerText = 'Create Account';
+            }
         }
 
-        // Returns to the front landing page interface
-        function exitApp() {
-            document.getElementById('app-layout').style.display = 'none';
-            document.getElementById('landing-page').style.display = 'flex';
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            
+            if (currentMode === 'signup') {
+                userAge = parseInt(document.getElementById('authAge').value) || 18;
+            } else {
+                userAge = 18; 
+            }
+
+            document.getElementById('authGate').classList.add('hidden');
+            document.getElementById('appDashboard').classList.remove('hidden');
+
+            renderTailoredDashboard();
         }
 
-        // Handles sidebar navigation switching between sections smoothly
-        function switchView(viewId, element) {
-            // Hide all views
-            const views = document.querySelectorAll('.view-section');
-            views.forEach(view => view.classList.remove('active'));
+        function renderTailoredDashboard() {
+            document.getElementById('welcomeBadge').innerText = `User Profile Tier: ${userAge} y/o`;
+            
+            const planTypeField = document.getElementById('metricPlanType');
+            const container = document.getElementById('exerciseContainer');
+            container.innerHTML = '';
 
-            // Remove active style from all nav buttons
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
+            let filteredExercises = [];
+            
+            if (userAge <= 15) {
+                planTypeField.innerText = "Machines Only";
+                filteredExercises = exerciseDatabase.filter(ex => ex.type === 'machine');
+            } 
+            else if (userAge >= 16 && userAge <= 19) {
+                planTypeField.innerText = "Mixed Intro Plan";
+                filteredExercises = exerciseDatabase.filter(ex => ex.type === 'machine' || ex.type === 'free-weight');
+            } 
+            else {
+                planTypeField.innerText = "Unrestricted Open Access";
+                filteredExercises = exerciseDatabase;
+            }
 
-            // Show target view & set active class on current sidebar button
-            document.getElementById('view-' + viewId).classList.add('active');
-            element.classList.add('active');
+            filteredExercises.forEach(ex => {
+                const card = document.createElement('div');
+                card.className = 'exercise-card';
+                card.innerHTML = `
+                    <div class="card-visual">
+                        ${ex.svg}
+                    </div>
+                    <div class="card-body">
+                        <span class="exercise-type-tag">${ex.type}</span>
+                        <h4 class="card-title">${ex.name}</h4>
+                        <p class="card-desc">${ex.desc}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
+
+        function logoutSession() {
+            document.getElementById('appDashboard').classList.add('hidden');
+            document.getElementById('authGate').classList.remove('hidden');
+            document.getElementById('authForm').reset();
+            switchAuthTab('signin');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            switchAuthTab('signin');
+        });
     </script>
 </body>
 </html>
